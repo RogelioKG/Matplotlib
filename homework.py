@@ -11,16 +11,18 @@ def Riemann_Sum(func: Callable, interval: tuple, piece: int = 100, *, rule: str)
             total += func(start) * dx
             start += dx
     elif rule == "right":
+        start += dx
         for _ in range(piece):
-            total += func(start + dx) * dx
+            total += func(start) * dx
             start += dx
     elif rule == "mid":
+        start += 0.5*dx
         for _ in range(piece):
-            total += func(start + 0.5*dx) * dx
+            total += func(start) * dx
             start += dx
     elif rule == "trapezoid":
         for _ in range(piece):
-            total += (func(start) + func(start + dx)) * dx / 2
+            total += (func(start) + func(start+dx)) * dx / 2
             start += dx
 
     return total
@@ -41,14 +43,15 @@ def Simpson_Formula(func: Callable, interval: tuple, piece: int = 100) -> float:
     return (1/3) * h * (func(start) + sum(4*func(start + i*h) if i%2 else 2*func(start + i*h) for i in range(1, 2*piece)) + func(end))
 
 
+#########################################
 def f(x: float) -> float:
-    return (7 ** pl.cos(x)) * pl.sin(x)
+    return x * pl.sqrt(2*x - 1)
 
+interval = (1, 2)
+real_value = 2.158204464
+#########################################
 
-interval = (0, pl.pi/2)
-real_value = 3.083390054
 print(f"數學積分     : {real_value:.9f}")
-
 
 print("迴圈求積:")
 # 矩形積分
@@ -63,7 +66,6 @@ print(f"下矩形積分   : {left:.9f}  誤差: {abs(real_value-left)}")
 # 梯形積分
 trapezoid = Riemann_Sum(f, interval, rule="trapezoid")
 print(f"梯形積分     : {trapezoid:.9f}  誤差: {abs(real_value-trapezoid)}")
-
 
 print("公式求積:")
 # 矩形求積法
